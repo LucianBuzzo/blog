@@ -58,7 +58,7 @@ export class Controls extends React.Component {
   constructor() {
     super()
 
-    const currentTheme = window.name
+    const currentTheme = window.name || 'light'
 
     this.state = {
       theme: currentTheme,

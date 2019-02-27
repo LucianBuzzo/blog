@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Lucian Buzzo]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsbyjs.github.io/gatsby-starter-blog/</link><generator>RSS for Node</generator><lastBuildDate>Wed, 27 Feb 2019 12:06:45 GMT</lastBuildDate><item><title><![CDATA[Writing bad Javascript micro libraries]]></title><description><![CDATA[Like many developers, I have a few Javascript libraries that turn to again and
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Lucian Buzzo]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsbyjs.github.io/gatsby-starter-blog/</link><generator>RSS for Node</generator><lastBuildDate>Wed, 27 Feb 2019 12:09:32 GMT</lastBuildDate><item><title><![CDATA[Writing bad Javascript micro libraries]]></title><description><![CDATA[Like many developers, I have a few Javascript libraries that turn to again and
 again. I often find myself loading the full
  jQuery  and…]]></description><link>https://gatsbyjs.github.io/gatsby-starter-blog//mini-libs/</link><guid isPermaLink="false">https://gatsbyjs.github.io/gatsby-starter-blog//mini-libs/</guid><pubDate>Wed, 27 May 2015 17:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Like many developers, I have a few Javascript libraries that turn to again and
 again. I often find myself loading the full
@@ -280,7 +280,7 @@ new subtitle text field on the live site.&lt;/li&gt;
 &lt;p&gt;This process of copying changes across would probably involve putting two browser
 windows side by side, one on the development site and one on the production
 site and making sure that all of the field settings match.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/gatsby-starter-blog/field-creation-146d6a285bd0027af1cb85cad4863fa1.gif&quot; alt=&quot;Creating a field in the gui...&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/lucian-buzzo-blog/field-creation-146d6a285bd0027af1cb85cad4863fa1.gif&quot; alt=&quot;Creating a field in the gui...&quot;&gt;&lt;/p&gt;
 &lt;p&gt;Manually recreating fields on a production server is a tedious and error prone
 business, especially when faced with the prospect of creating multiple new fields.
 Ideally this process should be automated and completed in as few steps as possible.&lt;/p&gt;
@@ -360,7 +360,7 @@ run from inside a Drupal installation directory.&lt;/p&gt;
 &lt;p&gt;I love this little drush script, but for me it was still bothersome that I had
 to drop out of the &lt;code class=&quot;language-text&quot;&gt;.install&lt;/code&gt; file I was working on, run the script and copy and
 paste the output. So I wrote a Vim plugin!&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/gatsby-starter-blog/fieldexport-plugin-e13394f177a8e1cb4a8874e5a6195b93.gif&quot; alt=&quot;Drupal field export vim plugin&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/lucian-buzzo-blog/fieldexport-plugin-e13394f177a8e1cb4a8874e5a6195b93.gif&quot; alt=&quot;Drupal field export vim plugin&quot;&gt;&lt;/p&gt;
 &lt;p&gt;Using this plugin I can type the machine name of a field, then go to normal mode
 and execute the function &lt;code class=&quot;language-text&quot;&gt;DrupalExportField&lt;/code&gt; (or map the function call to
 a leader key - in the example above I’m using the mapping &lt;code class=&quot;language-text&quot;&gt;&amp;lt;Leader&amp;gt;def&lt;/code&gt;). The
@@ -395,7 +395,7 @@ up an SSH session I was seeing the “bleurgh” prompt again.&lt;/p&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/gatsby-starter-blog/static/1c777bc2492dcf54dd2ef433d89ce164/8a142/ssh-bad.png&quot;
+    href=&quot;/lucian-buzzo-blog/static/1c777bc2492dcf54dd2ef433d89ce164/8a142/ssh-bad.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -414,10 +414,10 @@ up an SSH session I was seeing the “bleurgh” prompt again.&lt;/p&gt;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;Default ssh prompt&quot;
         title=&quot;&quot;
-        src=&quot;/gatsby-starter-blog/static/1c777bc2492dcf54dd2ef433d89ce164/8a142/ssh-bad.png&quot;
-        srcset=&quot;/gatsby-starter-blog/static/1c777bc2492dcf54dd2ef433d89ce164/3b8d9/ssh-bad.png 148w,
-/gatsby-starter-blog/static/1c777bc2492dcf54dd2ef433d89ce164/c9c62/ssh-bad.png 295w,
-/gatsby-starter-blog/static/1c777bc2492dcf54dd2ef433d89ce164/8a142/ssh-bad.png 569w&quot;
+        src=&quot;/lucian-buzzo-blog/static/1c777bc2492dcf54dd2ef433d89ce164/8a142/ssh-bad.png&quot;
+        srcset=&quot;/lucian-buzzo-blog/static/1c777bc2492dcf54dd2ef433d89ce164/3b8d9/ssh-bad.png 148w,
+/lucian-buzzo-blog/static/1c777bc2492dcf54dd2ef433d89ce164/c9c62/ssh-bad.png 295w,
+/lucian-buzzo-blog/static/1c777bc2492dcf54dd2ef433d89ce164/8a142/ssh-bad.png 569w&quot;
         sizes=&quot;(max-width: 569px) 100vw, 569px&quot;
       /&gt;
     &lt;/span&gt;
@@ -435,7 +435,7 @@ What if I accidentally kill a production server because I got confused?&lt;/p&gt
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/gatsby-starter-blog/static/6fdb60d81c6e2ce37db2393f01dcfbf5/859f1/custom-bad.png&quot;
+    href=&quot;/lucian-buzzo-blog/static/6fdb60d81c6e2ce37db2393f01dcfbf5/859f1/custom-bad.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -454,10 +454,10 @@ What if I accidentally kill a production server because I got confused?&lt;/p&gt
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;Custom prompt dissaproves&quot;
         title=&quot;&quot;
-        src=&quot;/gatsby-starter-blog/static/6fdb60d81c6e2ce37db2393f01dcfbf5/859f1/custom-bad.png&quot;
-        srcset=&quot;/gatsby-starter-blog/static/6fdb60d81c6e2ce37db2393f01dcfbf5/b7574/custom-bad.png 148w,
-/gatsby-starter-blog/static/6fdb60d81c6e2ce37db2393f01dcfbf5/94149/custom-bad.png 295w,
-/gatsby-starter-blog/static/6fdb60d81c6e2ce37db2393f01dcfbf5/859f1/custom-bad.png 314w&quot;
+        src=&quot;/lucian-buzzo-blog/static/6fdb60d81c6e2ce37db2393f01dcfbf5/859f1/custom-bad.png&quot;
+        srcset=&quot;/lucian-buzzo-blog/static/6fdb60d81c6e2ce37db2393f01dcfbf5/b7574/custom-bad.png 148w,
+/lucian-buzzo-blog/static/6fdb60d81c6e2ce37db2393f01dcfbf5/94149/custom-bad.png 295w,
+/lucian-buzzo-blog/static/6fdb60d81c6e2ce37db2393f01dcfbf5/859f1/custom-bad.png 314w&quot;
         sizes=&quot;(max-width: 314px) 100vw, 314px&quot;
       /&gt;
     &lt;/span&gt;
@@ -508,7 +508,7 @@ command line related accidents happen!&lt;/p&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/gatsby-starter-blog/static/6a3e77c29d28c90fe0f8f5e04ed50614/8a142/ssh-better.png&quot;
+    href=&quot;/lucian-buzzo-blog/static/6a3e77c29d28c90fe0f8f5e04ed50614/8a142/ssh-better.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -527,10 +527,10 @@ command line related accidents happen!&lt;/p&gt;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;A better SSH prompt&quot;
         title=&quot;&quot;
-        src=&quot;/gatsby-starter-blog/static/6a3e77c29d28c90fe0f8f5e04ed50614/8a142/ssh-better.png&quot;
-        srcset=&quot;/gatsby-starter-blog/static/6a3e77c29d28c90fe0f8f5e04ed50614/3b8d9/ssh-better.png 148w,
-/gatsby-starter-blog/static/6a3e77c29d28c90fe0f8f5e04ed50614/c9c62/ssh-better.png 295w,
-/gatsby-starter-blog/static/6a3e77c29d28c90fe0f8f5e04ed50614/8a142/ssh-better.png 569w&quot;
+        src=&quot;/lucian-buzzo-blog/static/6a3e77c29d28c90fe0f8f5e04ed50614/8a142/ssh-better.png&quot;
+        srcset=&quot;/lucian-buzzo-blog/static/6a3e77c29d28c90fe0f8f5e04ed50614/3b8d9/ssh-better.png 148w,
+/lucian-buzzo-blog/static/6a3e77c29d28c90fe0f8f5e04ed50614/c9c62/ssh-better.png 295w,
+/lucian-buzzo-blog/static/6a3e77c29d28c90fe0f8f5e04ed50614/8a142/ssh-better.png 569w&quot;
         sizes=&quot;(max-width: 569px) 100vw, 569px&quot;
       /&gt;
     &lt;/span&gt;
@@ -589,7 +589,7 @@ isn’t available.&lt;/p&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/gatsby-starter-blog/static/4148050c0be713bf48fc97e1c7821eaf/5439f/ssh-bestest.png&quot;
+    href=&quot;/lucian-buzzo-blog/static/4148050c0be713bf48fc97e1c7821eaf/5439f/ssh-bestest.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -608,10 +608,10 @@ isn’t available.&lt;/p&gt;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;The bestest ssh prompt&quot;
         title=&quot;&quot;
-        src=&quot;/gatsby-starter-blog/static/4148050c0be713bf48fc97e1c7821eaf/5439f/ssh-bestest.png&quot;
-        srcset=&quot;/gatsby-starter-blog/static/4148050c0be713bf48fc97e1c7821eaf/2349c/ssh-bestest.png 148w,
-/gatsby-starter-blog/static/4148050c0be713bf48fc97e1c7821eaf/2eaa1/ssh-bestest.png 295w,
-/gatsby-starter-blog/static/4148050c0be713bf48fc97e1c7821eaf/5439f/ssh-bestest.png 570w&quot;
+        src=&quot;/lucian-buzzo-blog/static/4148050c0be713bf48fc97e1c7821eaf/5439f/ssh-bestest.png&quot;
+        srcset=&quot;/lucian-buzzo-blog/static/4148050c0be713bf48fc97e1c7821eaf/2349c/ssh-bestest.png 148w,
+/lucian-buzzo-blog/static/4148050c0be713bf48fc97e1c7821eaf/2eaa1/ssh-bestest.png 295w,
+/lucian-buzzo-blog/static/4148050c0be713bf48fc97e1c7821eaf/5439f/ssh-bestest.png 570w&quot;
         sizes=&quot;(max-width: 570px) 100vw, 570px&quot;
       /&gt;
     &lt;/span&gt;
@@ -632,7 +632,7 @@ standard prompt into this:&lt;/p&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/gatsby-starter-blog/static/0a8c58f288cd49f95ab6b80fd3c657d6/73742/mdo-prompt.png&quot;
+    href=&quot;/lucian-buzzo-blog/static/0a8c58f288cd49f95ab6b80fd3c657d6/73742/mdo-prompt.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -651,11 +651,11 @@ standard prompt into this:&lt;/p&gt;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;Standard bash prompt&quot;
         title=&quot;&quot;
-        src=&quot;/gatsby-starter-blog/static/0a8c58f288cd49f95ab6b80fd3c657d6/40fad/mdo-prompt.png&quot;
-        srcset=&quot;/gatsby-starter-blog/static/0a8c58f288cd49f95ab6b80fd3c657d6/707e9/mdo-prompt.png 148w,
-/gatsby-starter-blog/static/0a8c58f288cd49f95ab6b80fd3c657d6/649e0/mdo-prompt.png 295w,
-/gatsby-starter-blog/static/0a8c58f288cd49f95ab6b80fd3c657d6/40fad/mdo-prompt.png 590w,
-/gatsby-starter-blog/static/0a8c58f288cd49f95ab6b80fd3c657d6/73742/mdo-prompt.png 600w&quot;
+        src=&quot;/lucian-buzzo-blog/static/0a8c58f288cd49f95ab6b80fd3c657d6/40fad/mdo-prompt.png&quot;
+        srcset=&quot;/lucian-buzzo-blog/static/0a8c58f288cd49f95ab6b80fd3c657d6/707e9/mdo-prompt.png 148w,
+/lucian-buzzo-blog/static/0a8c58f288cd49f95ab6b80fd3c657d6/649e0/mdo-prompt.png 295w,
+/lucian-buzzo-blog/static/0a8c58f288cd49f95ab6b80fd3c657d6/40fad/mdo-prompt.png 590w,
+/lucian-buzzo-blog/static/0a8c58f288cd49f95ab6b80fd3c657d6/73742/mdo-prompt.png 600w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
@@ -710,7 +710,7 @@ awesome!”&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/gatsby-starter-blog/static/b1027abf1774085c3a3eec787d1911db/95abb/standard-prompt.png&quot;
+    href=&quot;/lucian-buzzo-blog/static/b1027abf1774085c3a3eec787d1911db/95abb/standard-prompt.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -729,10 +729,10 @@ awesome!”&lt;/em&gt;.&lt;/p&gt;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;Standard bash prompt&quot;
         title=&quot;&quot;
-        src=&quot;/gatsby-starter-blog/static/b1027abf1774085c3a3eec787d1911db/95abb/standard-prompt.png&quot;
-        srcset=&quot;/gatsby-starter-blog/static/b1027abf1774085c3a3eec787d1911db/dd84a/standard-prompt.png 148w,
-/gatsby-starter-blog/static/b1027abf1774085c3a3eec787d1911db/95201/standard-prompt.png 295w,
-/gatsby-starter-blog/static/b1027abf1774085c3a3eec787d1911db/95abb/standard-prompt.png 487w&quot;
+        src=&quot;/lucian-buzzo-blog/static/b1027abf1774085c3a3eec787d1911db/95abb/standard-prompt.png&quot;
+        srcset=&quot;/lucian-buzzo-blog/static/b1027abf1774085c3a3eec787d1911db/dd84a/standard-prompt.png 148w,
+/lucian-buzzo-blog/static/b1027abf1774085c3a3eec787d1911db/95201/standard-prompt.png 295w,
+/lucian-buzzo-blog/static/b1027abf1774085c3a3eec787d1911db/95abb/standard-prompt.png 487w&quot;
         sizes=&quot;(max-width: 487px) 100vw, 487px&quot;
       /&gt;
     &lt;/span&gt;
@@ -760,7 +760,7 @@ adventure into the land of command line customisation that I doubt will ever end
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/gatsby-starter-blog/static/cfd6ffe89dd1a3e2a581557607b57456/84e3d/adventure.jpg&quot;
+    href=&quot;/lucian-buzzo-blog/static/cfd6ffe89dd1a3e2a581557607b57456/84e3d/adventure.jpg&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -779,14 +779,14 @@ adventure into the land of command line customisation that I doubt will ever end
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;Adventure time!&quot;
         title=&quot;&quot;
-        src=&quot;/gatsby-starter-blog/static/cfd6ffe89dd1a3e2a581557607b57456/f8fb9/adventure.jpg&quot;
-        srcset=&quot;/gatsby-starter-blog/static/cfd6ffe89dd1a3e2a581557607b57456/e8976/adventure.jpg 148w,
-/gatsby-starter-blog/static/cfd6ffe89dd1a3e2a581557607b57456/63df2/adventure.jpg 295w,
-/gatsby-starter-blog/static/cfd6ffe89dd1a3e2a581557607b57456/f8fb9/adventure.jpg 590w,
-/gatsby-starter-blog/static/cfd6ffe89dd1a3e2a581557607b57456/85e3d/adventure.jpg 885w,
-/gatsby-starter-blog/static/cfd6ffe89dd1a3e2a581557607b57456/d1924/adventure.jpg 1180w,
-/gatsby-starter-blog/static/cfd6ffe89dd1a3e2a581557607b57456/9452e/adventure.jpg 1770w,
-/gatsby-starter-blog/static/cfd6ffe89dd1a3e2a581557607b57456/84e3d/adventure.jpg 1898w&quot;
+        src=&quot;/lucian-buzzo-blog/static/cfd6ffe89dd1a3e2a581557607b57456/f8fb9/adventure.jpg&quot;
+        srcset=&quot;/lucian-buzzo-blog/static/cfd6ffe89dd1a3e2a581557607b57456/e8976/adventure.jpg 148w,
+/lucian-buzzo-blog/static/cfd6ffe89dd1a3e2a581557607b57456/63df2/adventure.jpg 295w,
+/lucian-buzzo-blog/static/cfd6ffe89dd1a3e2a581557607b57456/f8fb9/adventure.jpg 590w,
+/lucian-buzzo-blog/static/cfd6ffe89dd1a3e2a581557607b57456/85e3d/adventure.jpg 885w,
+/lucian-buzzo-blog/static/cfd6ffe89dd1a3e2a581557607b57456/d1924/adventure.jpg 1180w,
+/lucian-buzzo-blog/static/cfd6ffe89dd1a3e2a581557607b57456/9452e/adventure.jpg 1770w,
+/lucian-buzzo-blog/static/cfd6ffe89dd1a3e2a581557607b57456/84e3d/adventure.jpg 1898w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
@@ -822,7 +822,7 @@ downloads for both Terminal and Vim, making it very easy to setup.&lt;/p&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/gatsby-starter-blog/static/4e0b956505fa6950b536c04285569eaa/b2b55/solarized-dualmode.png&quot;
+    href=&quot;/lucian-buzzo-blog/static/4e0b956505fa6950b536c04285569eaa/b2b55/solarized-dualmode.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -841,10 +841,10 @@ downloads for both Terminal and Vim, making it very easy to setup.&lt;/p&gt;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;solarized dual display&quot;
         title=&quot;&quot;
-        src=&quot;/gatsby-starter-blog/static/4e0b956505fa6950b536c04285569eaa/b2b55/solarized-dualmode.png&quot;
-        srcset=&quot;/gatsby-starter-blog/static/4e0b956505fa6950b536c04285569eaa/861e4/solarized-dualmode.png 148w,
-/gatsby-starter-blog/static/4e0b956505fa6950b536c04285569eaa/77416/solarized-dualmode.png 295w,
-/gatsby-starter-blog/static/4e0b956505fa6950b536c04285569eaa/b2b55/solarized-dualmode.png 492w&quot;
+        src=&quot;/lucian-buzzo-blog/static/4e0b956505fa6950b536c04285569eaa/b2b55/solarized-dualmode.png&quot;
+        srcset=&quot;/lucian-buzzo-blog/static/4e0b956505fa6950b536c04285569eaa/861e4/solarized-dualmode.png 148w,
+/lucian-buzzo-blog/static/4e0b956505fa6950b536c04285569eaa/77416/solarized-dualmode.png 295w,
+/lucian-buzzo-blog/static/4e0b956505fa6950b536c04285569eaa/b2b55/solarized-dualmode.png 492w&quot;
         sizes=&quot;(max-width: 492px) 100vw, 492px&quot;
       /&gt;
     &lt;/span&gt;
@@ -862,7 +862,7 @@ able to read my screen at 3am because my IDE &lt;strong&gt;doesn’t look like t
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/gatsby-starter-blog/static/996163a1aff7b6a91f11b84ec5d059e5/79ad4/neonoverload.jpg&quot;
+    href=&quot;/lucian-buzzo-blog/static/996163a1aff7b6a91f11b84ec5d059e5/79ad4/neonoverload.jpg&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -881,10 +881,10 @@ able to read my screen at 3am because my IDE &lt;strong&gt;doesn’t look like t
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;Neon overload&quot;
         title=&quot;&quot;
-        src=&quot;/gatsby-starter-blog/static/996163a1aff7b6a91f11b84ec5d059e5/79ad4/neonoverload.jpg&quot;
-        srcset=&quot;/gatsby-starter-blog/static/996163a1aff7b6a91f11b84ec5d059e5/a7b8e/neonoverload.jpg 148w,
-/gatsby-starter-blog/static/996163a1aff7b6a91f11b84ec5d059e5/575d0/neonoverload.jpg 295w,
-/gatsby-starter-blog/static/996163a1aff7b6a91f11b84ec5d059e5/79ad4/neonoverload.jpg 400w&quot;
+        src=&quot;/lucian-buzzo-blog/static/996163a1aff7b6a91f11b84ec5d059e5/79ad4/neonoverload.jpg&quot;
+        srcset=&quot;/lucian-buzzo-blog/static/996163a1aff7b6a91f11b84ec5d059e5/a7b8e/neonoverload.jpg 148w,
+/lucian-buzzo-blog/static/996163a1aff7b6a91f11b84ec5d059e5/575d0/neonoverload.jpg 295w,
+/lucian-buzzo-blog/static/996163a1aff7b6a91f11b84ec5d059e5/79ad4/neonoverload.jpg 400w&quot;
         sizes=&quot;(max-width: 400px) 100vw, 400px&quot;
       /&gt;
     &lt;/span&gt;

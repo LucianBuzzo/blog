@@ -58,7 +58,7 @@ export class Controls extends React.Component {
   constructor() {
     super()
 
-    const currentTheme = window.name || 'light'
+    const currentTheme = (typeof window !== 'undefined' && window.name) || 'light'
 
     this.state = {
       theme: currentTheme,
@@ -67,17 +67,20 @@ export class Controls extends React.Component {
 
     this.toggleTheme = this.toggleTheme.bind(this)
 
-    const style = document.getElementById(THEME_CSS_ID)
+    if (typeof document !== 'undefined') {
+      const style = document.getElementById(THEME_CSS_ID)
 
-    if (style) {
-      this.style = style
-    } else {
-      this.style = document.createElement('style')
-      this.style.type = 'text/css'
-      document.head.appendChild(this.style)
+      if (style) {
+        this.style = style
+      } else {
+        this.style = document.createElement('style')
+        this.style.type = 'text/css'
+        document.head.appendChild(this.style)
+      }
+
+      this.style.innerHTML = this.state.theme === 'light' ? LIGHT_THEME : DARK_THEME
     }
 
-    this.style.innerHTML = this.state.theme === 'light' ? LIGHT_THEME : DARK_THEME
   }
 
   toggleTheme() {

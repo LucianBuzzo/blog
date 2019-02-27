@@ -27,7 +27,7 @@ class Bio extends React.Component {
           }}
         />
         <p>
-          I'm a Software Engineer at <a href='https://www.balena.io/'>balena.io</a>, BMXer and hobbyist martial artist who lives and works in Cornwall.
+          I'm a Software Engineer at <a href='https://www.balena.io/'>balena.io</a>, BMX rider and hobbyist martial artist who lives and works in Cornwall.
         </p>
       </div>
     )

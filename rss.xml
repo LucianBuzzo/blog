@@ -1,4 +1,295 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Lucian Buzzo]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsbyjs.github.io/gatsby-starter-blog/</link><generator>RSS for Node</generator><lastBuildDate>Wed, 27 Feb 2019 12:12:11 GMT</lastBuildDate><item><title><![CDATA[Writing bad Javascript micro libraries]]></title><description><![CDATA[Like many developers, I have a few Javascript libraries that turn to again and
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Lucian Buzzo]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsbyjs.github.io/gatsby-starter-blog/</link><generator>RSS for Node</generator><lastBuildDate>Sat, 02 Mar 2019 19:37:03 GMT</lastBuildDate><item><title><![CDATA[Definitions for filtering properties in JSON schema]]></title><description><![CDATA[Using   to remove undefined fields from an object,
+is a feature that crops up regularly in JSON schema libraries, but tends to have
+some…]]></description><link>https://gatsbyjs.github.io/gatsby-starter-blog//json-schema-filtering/</link><guid isPermaLink="false">https://gatsbyjs.github.io/gatsby-starter-blog//json-schema-filtering/</guid><pubDate>Sat, 02 Mar 2019 19:30:32 GMT</pubDate><content:encoded>&lt;p&gt;Using &lt;code class=&quot;language-text&quot;&gt;additionalProperties: false&lt;/code&gt; to remove undefined fields from an object,
+is a feature that crops up regularly in JSON schema libraries, but tends to have
+some strange behaviours especially, once the &lt;code class=&quot;language-text&quot;&gt;anyOf&lt;/code&gt; keyword is used.
+This article aims to specify the expected functionality of this feature and what
+rules it should follow when filtering across different branches of an &lt;code class=&quot;language-text&quot;&gt;anyOf&lt;/code&gt;
+keyword.&lt;/p&gt;
+&lt;p&gt;When filtering; an object that validates against the provided schema will have
+any undefined properties removed if &lt;code class=&quot;language-text&quot;&gt;additionalProperties&lt;/code&gt; is set to &lt;code class=&quot;language-text&quot;&gt;false&lt;/code&gt;.
+This behaviour prevents the usual &lt;code class=&quot;language-text&quot;&gt;additionalProperties: false&lt;/code&gt; behaviour from
+working. As such when validating an object to see if it is valid against the
+provided schema, the value of &lt;code class=&quot;language-text&quot;&gt;additionalProperties&lt;/code&gt; should be evaluated as
+though it were set to &lt;code class=&quot;language-text&quot;&gt;true&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;For example, this object:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; bar
+&lt;span class=&quot;token key atrule&quot;&gt;baz&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; buzz&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Would normally fail validation against the following schema:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+&lt;span class=&quot;token key atrule&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; foo
+&lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;false&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This is due to the presence of the additional undefined field &lt;code class=&quot;language-text&quot;&gt;baz&lt;/code&gt;. However
+because we want to remove undefined fields, rather than simply failing
+validation, when the object is validated, a modified version of the schema with
+&lt;code class=&quot;language-text&quot;&gt;additionalProperties&lt;/code&gt; set to true should be used. In the example schema above,
+internally the filter implementation would validate using the schema:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+&lt;span class=&quot;token key atrule&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; foo
+&lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;true&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The given object is valid against this modified schema, so the filtering logic
+can now run using the original schema, removing the undefined property &lt;code class=&quot;language-text&quot;&gt;baz&lt;/code&gt;
+and resulting in a final object like this:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; bar&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To make an analogy, filtering behaves like a cookie cutter:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;There must be enough cookie dough to fill the cutter, otherwise, the dough is cannot be cut.&lt;/li&gt;
+&lt;li&gt;If there is excess dough then it is cut away by the cutter.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;A note on &lt;code class=&quot;language-text&quot;&gt;required&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;If a field is &lt;code class=&quot;language-text&quot;&gt;required&lt;/code&gt;, but it is not defined in &lt;code class=&quot;language-text&quot;&gt;properties&lt;/code&gt;, it should not
+be removed. The following two schemas are equivalent:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; foo
+&lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;false&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; any
+    &lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; foo
+&lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;false&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Evaluating &lt;code class=&quot;language-text&quot;&gt;anyOf&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;When filtering using a schema containing &lt;code class=&quot;language-text&quot;&gt;anyOf&lt;/code&gt;, each branch of the &lt;code class=&quot;language-text&quot;&gt;anyOf&lt;/code&gt;
+should be merged with top-level properties to create a new schema, which is then
+used to validate the object. If validation passes, then the schema can be used
+to filter the object.&lt;/p&gt;
+&lt;h3&gt;Reconciling &lt;code class=&quot;language-text&quot;&gt;additionalProperties&lt;/code&gt; between &lt;code class=&quot;language-text&quot;&gt;anyOf&lt;/code&gt; branches and the top-level&lt;/h3&gt;
+&lt;p&gt;When merging &lt;code class=&quot;language-text&quot;&gt;additionalProperties&lt;/code&gt;, they are combined using an &lt;code class=&quot;language-text&quot;&gt;AND&lt;/code&gt; operator,
+where the values are evaluated topmost first.
+The following two schemas are equivalent:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# Before merge&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+&lt;span class=&quot;token key atrule&quot;&gt;anyOf&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+    &lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;slug&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+    &lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; slug
+&lt;span class=&quot;token key atrule&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; type
+&lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+    &lt;span class=&quot;token key atrule&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# After merge&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+&lt;span class=&quot;token key atrule&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; type
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; slug
+&lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+    &lt;span class=&quot;token key atrule&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user
+  &lt;span class=&quot;token key atrule&quot;&gt;slug&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If the &lt;code class=&quot;language-text&quot;&gt;anyOf&lt;/code&gt; branch has &lt;code class=&quot;language-text&quot;&gt;additionalProperties: false&lt;/code&gt;, then the value of
+&lt;code class=&quot;language-text&quot;&gt;properties&lt;/code&gt; in the &lt;code class=&quot;language-text&quot;&gt;anyOf&lt;/code&gt; branch will overwrite the value of &lt;code class=&quot;language-text&quot;&gt;properties&lt;/code&gt; and
+the top-level schema. This makes the following two schemas equivalent:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# Before merge&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+&lt;span class=&quot;token key atrule&quot;&gt;anyOf&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+    &lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;slug&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+    &lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; slug
+&lt;span class=&quot;token key atrule&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; type
+&lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+    &lt;span class=&quot;token key atrule&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# After merge&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+&lt;span class=&quot;token key atrule&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; type
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; slug
+&lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;slug&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This also applies to nested schemas in an &lt;code class=&quot;language-text&quot;&gt;anyOf&lt;/code&gt; branch. This behaviour allows
+you to effectively “whitelist” fields inside an object using an &lt;code class=&quot;language-text&quot;&gt;anyOf&lt;/code&gt; branch.
+For example:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# Before merge&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+&lt;span class=&quot;token key atrule&quot;&gt;anyOf&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+    &lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;slug&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+      &lt;span class=&quot;token key atrule&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+        properties
+          &lt;span class=&quot;token key atrule&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+        &lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+        required
+          &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; email
+    &lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; slug
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; data
+&lt;span class=&quot;token key atrule&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; type
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; data
+&lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+    &lt;span class=&quot;token key atrule&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user
+  &lt;span class=&quot;token key atrule&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+    properties
+      &lt;span class=&quot;token key atrule&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+    &lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    required
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; password&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# After merge&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+&lt;span class=&quot;token key atrule&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; type
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; slug
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; data
+&lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;slug&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+  &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+    &lt;span class=&quot;token key atrule&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user
+  &lt;span class=&quot;token key atrule&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+    properties
+      &lt;span class=&quot;token key atrule&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+    &lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    required
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; email&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Reconciling multiple matching &lt;code class=&quot;language-text&quot;&gt;anyOf&lt;/code&gt; branches&lt;/h3&gt;
+&lt;p&gt;If more than one branch of &lt;code class=&quot;language-text&quot;&gt;anyOf&lt;/code&gt; matches the object being filtered, then the
+matching branches are first merged together, and then merged with the top-level
+schema fields.
+When reconciling &lt;code class=&quot;language-text&quot;&gt;additionalProperties&lt;/code&gt; between &lt;code class=&quot;language-text&quot;&gt;anyOf&lt;/code&gt; branches, they are
+combined using an &lt;code class=&quot;language-text&quot;&gt;OR&lt;/code&gt; operator,&lt;/p&gt;
+&lt;p&gt;For example, given this object:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;45678&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;slug&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;guest
+&lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user
+&lt;span class=&quot;token key atrule&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;roles&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;team&apos;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And the following schema:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+&lt;span class=&quot;token key atrule&quot;&gt;anyOf&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+    &lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;slug&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token key atrule&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;guest
+        &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+    &lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;true&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+    &lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; number
+    &lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; type
+&lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+    &lt;span class=&quot;token key atrule&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Both branches of the &lt;code class=&quot;language-text&quot;&gt;anyOf&lt;/code&gt; match the object, so they should be merged
+together:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+&lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;slug&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;guest
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+  &lt;span class=&quot;token key atrule&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; number
+&lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;true&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This schema is then merged with the top level:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+&lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+    &lt;span class=&quot;token key atrule&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user
+  &lt;span class=&quot;token key atrule&quot;&gt;slug&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;guest
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+  &lt;span class=&quot;token key atrule&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; number
+&lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;true&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This final schema is then used to filter the object, however in this case, the
+&lt;code class=&quot;language-text&quot;&gt;additionalProperties&lt;/code&gt; field is &lt;code class=&quot;language-text&quot;&gt;true&lt;/code&gt;, so no fields are removed from the
+object.&lt;/p&gt;
+&lt;p&gt;This behaviour makes the following two calls equivalent&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;Filter (
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+    &lt;span class=&quot;token key atrule&quot;&gt;anyOf&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+        &lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;token key atrule&quot;&gt;slug&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;token key atrule&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;guest
+            &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+        &lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;true&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+        &lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;token key atrule&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; number
+        &lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;false&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; type
+    &lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+        &lt;span class=&quot;token key atrule&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user
+    &lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;45678&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;slug&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;guest
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user
+    &lt;span class=&quot;token key atrule&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;roles&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;team&apos;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;Filter (
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; object
+    &lt;span class=&quot;token key atrule&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+        &lt;span class=&quot;token key atrule&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user
+      &lt;span class=&quot;token key atrule&quot;&gt;slug&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token key atrule&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;guest
+        &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string
+      &lt;span class=&quot;token key atrule&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; number
+    &lt;span class=&quot;token key atrule&quot;&gt;additionalProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;45678&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;slug&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;guest
+    &lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; user
+    &lt;span class=&quot;token key atrule&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;roles&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;team&apos;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;: This behaviour will change depending on the document being filtered, as
+different documents will match different &lt;code class=&quot;language-text&quot;&gt;anyOf&lt;/code&gt; branches.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Writing bad Javascript micro libraries]]></title><description><![CDATA[Like many developers, I have a few Javascript libraries that turn to again and
 again. I often find myself loading the full
  jQuery  and…]]></description><link>https://gatsbyjs.github.io/gatsby-starter-blog//mini-libs/</link><guid isPermaLink="false">https://gatsbyjs.github.io/gatsby-starter-blog//mini-libs/</guid><pubDate>Wed, 27 May 2015 17:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Like many developers, I have a few Javascript libraries that turn to again and
 again. I often find myself loading the full

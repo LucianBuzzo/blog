@@ -13,19 +13,9 @@ class Bio extends React.Component {
       <div
         style={{
           display: 'flex',
-          marginBottom: rhythm(2.5),
+          marginBottom: rhythm(1),
         }}
       >
-        <img
-          src={profilePic}
-          alt={`Lucian Buzzo`}
-          style={{
-            marginRight: rhythm(1 / 2),
-            marginBottom: 0,
-            width: rhythm(2),
-            height: rhythm(2),
-          }}
-        />
         <p>
           I'm a Software Engineer at <a href='https://www.balena.io/'>balena.io</a>, BMX rider and hobbyist martial artist who lives and works in Cornwall.
         </p>

@@ -95,6 +95,7 @@ export class Controls extends React.Component {
   }
 
   render() {
+    const scale = (typeof window !== 'undefined' && window.innerWidth) > 760 ? 1 : 0.5
     return (
       <div
         style={{
@@ -104,7 +105,7 @@ export class Controls extends React.Component {
           width: GUTTER * 2 + ICON_SIZE * 2,
           height: GUTTER * 2 + ICON_SIZE * 2,
           transition: `transform ${ANIMATION_TIMING}ms ease-in-out`,
-          transform: `rotate(${this.state.rotate}deg)`
+          transform: `rotate(${this.state.rotate}deg) scale(${scale})`
         }}
       >
         <IconImage

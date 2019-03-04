@@ -2,8 +2,8 @@ module.exports = {
   siteMetadata: {
     title: 'Lucian Buzzo',
     author: 'Lucian Buzzo',
-    description: 'A starter blog demonstrating what Gatsby can do.',
-    siteUrl: 'https://gatsbyjs.github.io/gatsby-starter-blog/',
+    description: 'Lucian Buzzo, Software Engineer',
+    siteUrl: 'https://lucianbuzzo.com',
   },
   plugins: [
     {
@@ -75,7 +75,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-google-analytics`,
       options: {
-        //trackingId: `ADD YOUR TRACKING ID HERE`,
+        trackingId: 'UA-135556539-1',
       },
     },
     `gatsby-plugin-feed`,
@@ -88,7 +88,7 @@ module.exports = {
         background_color: `#ffffff`,
         theme_color: `#663399`,
         display: `minimal-ui`,
-        icon: `src/assets/gatsby-icon.png`,
+        icon: `src/assets/icon.png`,
       },
     },
     `gatsby-plugin-offline`,

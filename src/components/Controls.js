@@ -12,6 +12,9 @@ const IconImage = styled.img`
   &:hover {
     cursor: pointer;
   }
+
+  display: inline-block;
+  animation: wiggle 0.2s 2;
 `
 
 const GUTTER = 15

@@ -1,8 +1,8 @@
 module.exports = {
   siteMetadata: {
-    title: 'Lucian Buzzo',
+    title: 'Living Life on the Outside',
     author: 'Lucian Buzzo',
-    description: 'Lucian Buzzo, Software Engineer',
+    description: 'Personal blog of Lucian Buzzo',
     siteUrl: 'https://lucianbuzzo.com',
   },
   plugins: [
@@ -78,7 +78,6 @@ module.exports = {
         trackingId: 'UA-135556539-1',
       },
     },
-    `gatsby-plugin-feed`,
     {
       resolve: `gatsby-plugin-manifest`,
       options: {

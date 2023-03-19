@@ -17,7 +17,9 @@ class Bio extends React.Component {
         }}
       >
         <p>
-          I'm a Software Engineer at <a href='https://www.balena.io/'>balena.io</a>, BMX rider and hobbyist martial artist who lives and works in Cornwall.
+          It's me, Lucian Buzzo, and this is my personal blog, where I write about things that interest me.
+          <br />
+          You can check out my GitHub profile <a href="https://github.com/LucianBuzzo">here</a> and my Twitter profile <a href="https://twitter.com/LucianBuzzo">here</a>.
         </p>
       </div>
     )

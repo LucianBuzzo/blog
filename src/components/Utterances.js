@@ -15,7 +15,9 @@ const Utterances = () => {
     containerRef.current.appendChild(scriptElement);
 
     return () => {
-      containerRef.current.removeChild(scriptElement);
+      if (containerRef.current) {
+        containerRef.current.removeChild(scriptElement);
+      }
     };
   }, []);
 

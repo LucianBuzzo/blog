@@ -1,47 +1,172 @@
 ---
-title: Exploring Cryptography - Frequency Analysis
+title: Exploring Cryptography - Frequency Analysis pt.2
 date: '2023-03-19T15:25:41.977Z'
 ---
 
-In this article we will be looking at a simple technique for breaking a simple substitution cipher. This technique is called frequency analysis, and is one of the simplest techniques for breaking a simple substitution cipher. It is also one of the most effective, and is often used as a first step in breaking a cipher.
+In [my previous post](https://lucianbuzzo.com/exploring-cryptography-frequency-analysis/), I explored frequency analysis and how it can be used to break simple substitution ciphers, specifically the Caesar cipher. I also highlighted how the Caesar cipher can be cracked using brute force and a word list. Using a word list didn't feel particularly satisfying to me though, so in this post I'll look at breaking the Caesar cipher using frequency analysis alone.
 
-A simple substitution cipher is one where each letter in the plaintext is replaced with a different letter in the ciphertext. A classic example of a simple substitution cipher is the Caesar cipher, where each letter in the plaintext is replaced with the letter 3 places to the right in the alphabet. For example, the letter `a` would be replaced with the letter `d`, the letter `b` would be replaced with the letter `e`, and so on.
-
-Unfortunately, this approach to encryption, where we substitute each letter in the plaintext with a different letter in the ciphertext, is not very secure. This is because it is very easy to break. All we need to do is look at the frequency of letters in the ciphertext, and then compare that to the frequency of letters in the English language. We can then use this information to work out which letters in the ciphertext correspond to which letters in the plaintext. This applies to any simple substitution cipher, not just the Caesar cipher, so even if we don't know which cipher was used, we can still break it. This applies to ciphers that use a different shift distance or a different alphabet (even made up symbols), as long as we know the language that the plaintext was written in.
-
-## Frequency Analysis
-
-It's important to note t the most common letter is typically considered to be `e`, followed by `t`, `a`, `o`, `i`, `n`, `s`, `h`, `r`, and `d`. The least common letter is typically considered to be `q`, followed by `z`, `x`, `j`, `k`, `v`, `b`, `p`, `y`, and `w`. It's important to note that letter frequency will vary depending on the text sampled, but this is a good approximation for the English language.
-For this article, I'm going to be using the [frequency data from Cornell's cryptography course](https://pi.math.cornell.edu/~mec/2003-2004/cryptography/subs/frequencies.html), which is based on a sample of 40,000 words from the English language.
-By comparing the frequency of letters in the ciphertext to the frequency of letters in the English language, we can work out which letters in the ciphertext correspond to which letters in the plaintext. For example, if we look at the frequency of letters in the ciphertext, and we see that the letter `b` is the most common, we can begin to crack the cipher by assuming that the letter `b` in the ciphertext corresponds to the letter `e` in the plaintext (`e` being the most common letter in plain English). We can then repeat this process for the rest of the letters in the ciphertext, and we should be able to work out which letters in the ciphertext correspond to which letters in the plaintext.
-
-If we know that a Caesar cipher was used, we can use the frequency analysis technique to work out the shift distance. For example, if we know that the letter `b` in the ciphertext corresponds to the letter `e` in the plaintext, we can work out that the shift distance is 3. This is because the letter `b` is 3 letters to the right of the letter `e` in the alphabet. We can then use this information to decrypt the ciphertext.
-
-## Breaking the Caesar Cipher
-
-Let's start with a simple Caesar cipher implementation in JavaScript:
+To begin with, I need a baseline letter frequency table to compare against. As before, I'm going to use the [frequency table from Cornell's website](https://pi.math.cornell.edu/~mec/2003-2004/cryptography/subs/frequencies.html), adjusted to provide values between 0 and 1.
 
 ```js
-const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('')
-
-function caesarCipher(text, shift = 3) {
-  let result = []
-  const input = text.toLowerCase()
-
-  for (let i = 0; i < input.length; i++) {
-    const letter = input[i]
-    if (alphabet.includes(letter)) {
-      const index = alphabet.indexOf(letter)
-      const newIndex = (index + shift) % alphabet.length
-      result.push(newIndex)
-    }
-  }
-
-  return result.map(index => alphabet[index]).join('')
+const STANDARD_FREQUENCIES = {
+  a: 0.0812,
+  b: 0.0149,
+  c: 0.0271,
+  d: 0.0432,
+  e: 0.1202,
+  f: 0.023,
+  g: 0.0203,
+  h: 0.0592,
+  i: 0.0731,
+  j: 0.001,
+  k: 0.0069,
+  l: 0.0398,
+  m: 0.0261,
+  n: 0.0695,
+  o: 0.0768,
+  p: 0.0182,
+  q: 0.0011,
+  r: 0.0602,
+  s: 0.0628,
+  t: 0.091,
+  u: 0.0288,
+  v: 0.0111,
+  w: 0.0209,
+  x: 0.0017,
+  y: 0.0211,
+  z: 0.0007,
 }
 ```
 
-Using this function, we can encrypt a text using the Caesar cipher:
+This gives us a baseline to compare against, but we need to normalize the frequencies of the ciphertext to match the standard frequencies. To do this, we need to count the number of occurrences of each letter in the ciphertext, and then divide each count by the total number of letters in the ciphertext (this is the same function used previously, copied here for clarity).
+
+```js
+function frequencyAnalysis(text) {
+  const processedText = text.replace(/[^a-zA-Z]/g, '').toLowerCase()
+  const charFrequency = {}
+  for (let char of processedText) {
+    if (charFrequency[char]) {
+      charFrequency[char]++
+    } else {
+      charFrequency[char] = 1
+    }
+  }
+  const totalChars = processedText.length
+  for (let char in charFrequency) {
+    charFrequency[char] = charFrequency[char] / totalChars
+  }
+  return charFrequency
+}
+```
+
+We can now take a ciphertext, and generate a set of letter frequencies for it. We can then compare these frequencies to the standard frequencies and see if the results are similar. An intuitive way to understand this is to visualize the sets of frequencies as a bar chart. If the high points and low points on the bar chart correspond to the same letters, then the two sets of frequencies are similar and it's likely that we have the correct [key](<https://en.wikipedia.org/wiki/Key_(cryptography)>). Just for fun, lets make a simple aasci bar chart generator:
+
+```js
+const aasciBarChart = data => {
+  const max = Math.max(...Object.values(data))
+  const entries = Object.entries(data).sort(([a], [b]) => (a < b ? -1 : 1))
+
+  entries.forEach(([key, value]) => {
+    const length = Math.round((value / max) * 50)
+    const bar = '▒'.repeat(length)
+    console.log(`${key}: ${bar}`)
+  })
+}
+```
+
+If we plug in the standard frequencies, we get the following chart:
+
+```
+a: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+b: ▒▒▒▒▒▒
+c: ▒▒▒▒▒▒▒▒▒▒▒
+d: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+e: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+f: ▒▒▒▒▒▒▒▒▒▒
+g: ▒▒▒▒▒▒▒▒
+h: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+i: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+j:
+k: ▒▒▒
+l: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+m: ▒▒▒▒▒▒▒▒▒▒▒
+n: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+o: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+p: ▒▒▒▒▒▒▒▒
+q:
+r: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+s: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+t: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+u: ▒▒▒▒▒▒▒▒▒▒▒▒
+v: ▒▒▒▒▒
+w: ▒▒▒▒▒▒▒▒▒
+x: ▒
+y: ▒▒▒▒▒▒▒▒▒
+z:
+```
+
+In the chart you can see a big spike on the letters `e`, `t`, `a` and `o`, as they are the most commonly occurring letters. Conversely we can also see dips on the least common letters: `x`, `q`, `j` and `z`.
+
+Now lets plug in a ciphertext encoded with a Caesar cipher using a key of 3:
+
+```
+a: ▒
+b: ▒▒▒▒▒▒
+c:
+d: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+e: ▒▒▒▒▒▒▒▒▒▒
+f: ▒▒▒▒▒▒▒▒▒▒▒▒
+g: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+h: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+i: ▒▒▒▒▒▒▒▒▒▒
+j: ▒▒▒▒▒▒▒▒
+k: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+l: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+m: ▒
+n: ▒▒▒▒▒▒▒
+o: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+p: ▒▒▒▒▒▒▒▒
+q: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+r: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+s: ▒▒▒▒▒▒
+t:
+u: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+v: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+w: ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+x: ▒▒▒▒▒▒▒▒▒▒▒
+y: ▒▒▒
+z: ▒▒▒▒▒▒▒▒
+```
+
+As you can see our peaks have shifted (as expected), instead of seeing a peak on `e` we now see a peak on `h`. This is because the Caesar cipher shifts the alphabet by 3, so `e` becomes `h`, `t` becomes `w`, `a` becomes `d` and `o` becomes `r`.
+
+We can now right an algorithm that iterates through all of the 26 possible keys for a Caesar cipher and finds the best match based on how close the letter frequency of deciphered text matches the letter frequency of the English language. For each letter in the frequency set generated for the deciphered text, we calculate the difference between the letter frequency of the deciphered text and the letter frequency of the English language. We then sum all of these differences to get a total difference for the deciphered text. The key that produces the lowest total difference is the most likely key for the Caesar cipher. We can utilize `Math.abs` here to make sure we always get a positive number when checking the difference.
+
+```js
+function crackWithFrequencyAnalysis(cipherText) {
+  let bestShift = 0
+  let bestScore = 100
+
+  for (let shift = 0; shift < alphabet.length; shift++) {
+    const decipheredText = caesarDecipher(shift, cipherText)
+    const letterFrequency = frequencyAnalysis(decipheredText)
+    const score = Object.keys(letterFrequency).reduce((acc, letter) => {
+      const frequency = letterFrequency[letter]
+      const standardFrequency = STANDARD_FREQUENCIES[letter]
+      return acc + Math.abs(frequency - standardFrequency)
+    }, 0)
+
+    if (score < bestScore) {
+      bestScore = score
+      bestShift = shift
+    }
+  }
+
+  return caesarDecipher(bestShift, cipherText)
+}
+```
+
+Let's see how this works using our example ciphertext and Caesar algorithm from the previous article:
 
 ```js
 const cipherText = caesarCipher(`
@@ -51,153 +176,63 @@ const cipherText = caesarCipher(`
     If you think only of hitting, springing, striking or touching the enemy, you will not be 
     able actually to cut him.
 `)
+const result = crackWithFrequencyAnalysis(cipherText)
+console.log(result)
+// -> theprimarythingwhenyoutakeaswordinyourhandsisyourintentiontocuttheenemywhateverthemeanswheneveryouparryhitspringstrikeortouchtheenemyscuttingswordyoumustcuttheenemyinthesamemovementitisessentialtoattainthisifyouthinkonlyofhittingspringingstrikingortouchingtheenemyyouwillnotbeableactuallytocuthim
 ```
 
-To produce the following ciphertext:
-
-```
-wkhsulpdubwklqjzkhqbrxwdnhdvzruglqbrxukdqgvlvbrxulqwhqwlrqwrfxwwkhhqhpbzkdwhyhuwkhphdqvzkhqhyhubrxsduubklwvsulqjvwulnhruwrxfkwkhhqhpbvfxwwlqjvzrugbrxpxvwfxwwkhhqhpblqwkhvdphpryhphqwlwlvhvvhqwldowrdwwdlqwklvlibrxwklqnrqobriklwwlqjvsulqjlqjvwulnlqjruwrxfklqjwkhhqhpbbrxzlooqrwehdeohdfwxdoobwrfxwklp
-```
-
-The next thing we want to do is write a function that can perform frequency analysis on a given ciphertext:
+Nice! We've successfully cracked the Caesar cipher using frequency analysis, without having to rely on word lists. This method works best with big blocks of text, so it's not ideal for cracking short messages. I'd like to create an experiment to see, on average, what length of text is required for the cracking algorithm to have 100% success rate. To do this, I'll use random blocks of text generated from https://randomtextgenerator.com/, iteratively increasing the length of the text being used. I can then run the cracking algorithm and see if it successfully cracks the cipher (I'll refactor the cracking algorithm to return the key instead of the deciphered text). If I get 100% of the samples cracked for a given length of text, I exit the loop and return the length of text that was used.
 
 ```js
-function frequencyAnalysis(text) {
-  // Process the text: remove special characters, convert to lowercase
-  const processedText = text.replace(/[^a-zA-Z]/g, '').toLowerCase()
+const KEY = 3
+const SAMPLE_SIZE = 100
+const ITERATIONS = 100
 
-  // Initialize an empty object to store the character frequencies
-  const charFrequency = {}
+const lengthForAccuracy = []
 
-  // Iterate through each character in the processed text
-  for (let char of processedText) {
-    // If the character is already in the object, increment its count
-    if (charFrequency[char]) {
-      charFrequency[char]++
-    } else {
-      // If the character is not in the object, add it with a count of 1
-      charFrequency[char] = 1
+while (lengthForAccuracy.length < ITERATIONS) {
+  for (let i = 10; i < 10000; i += 10) {
+    let matches = 0
+    let samples = 0
+    // Run SAMPLE_SIZE random samples of `i` length
+    while (samples < SAMPLE_SIZE) {
+      // Random number between 0 and the length of the text minus i
+      const j = Math.floor(Math.random() * (text.length - i))
+      samples++
+      // Get a random sample of `i` length
+      const sample = caesarCipher(KEY, text.slice(j, j + i))
+      // Check to see if the crack was correct
+      const crack = crackWithFrequencyAnalysis(sample)
+      if (crack === KEY) {
+        matches++
+      }
+    }
+    // If we have 100% success, exit the loop
+    if (matches === samples) {
+      lengthForAccuracy.push(i)
+      break
     }
   }
-
-  // Calculate the total number of characters
-  const totalChars = processedText.length
-
-  // Iterate through each character in the object and calculate the frequency
-  for (let char in charFrequency) {
-    charFrequency[char] = charFrequency[char] / totalChars
-  }
-
-  return charFrequency
 }
+
+const average =
+  lengthForAccuracy.reduce((acc, val) => acc + val, 0) /
+  lengthForAccuracy.length
+console.log(average)
 ```
 
-This function returns a map of each character in the ciphertext to its frequency. For example, if we pass the ciphertext from the previous section into this function, we get the following output:
+This takes a while to run, but I get an average length of text required for 100% success of 82.6 characters with my test data, which I've [posted in a gist here](https://gist.github.com/LucianBuzzo/626a08a14ed48169e6263522d8722bbf). This is a somewhat naive approach, and it depends heavily on the text being analysed, but it's a good starting point and I think it shows that frequency analysis can work on even short messages (82 characters is not a lot!). As a follow up to this exercise I'd like to see how this approach can be generalized to other substitution ciphers, where the key, and even method is unknown.
 
-```js
-{
-  w: 0.125,
-  k: 0.06418918918918919,
-  h: 0.10810810810810811,
-  s: 0.013513513513513514,
-  u: 0.05405405405405406,
-  l: 0.09121621621621621,
-  p: 0.037162162162162164,
-  d: 0.0472972972972973,
-  b: 0.05067567567567568,
-  q: 0.09121621621621621,
-  j: 0.02702702702702703,
-  z: 0.02027027027027027,
-  r: 0.07094594594594594,
-  x: 0.05067567567567568,
-  n: 0.013513513513513514,
-  v: 0.05405405405405406,
-  g: 0.010135135135135136,
-  f: 0.02364864864864865,
-  y: 0.010135135135135136,
-  o: 0.02364864864864865,
-  i: 0.006756756756756757,
-  e: 0.006756756756756757
-}
-```
+I hope you've enjoyed this article, and learned something along the way. If you have any questions or comments, please let me know in the comments below, or hit me up on Twitter [@LucianBuzzo](https://twitter.com/LucianBuzzo).
 
-From this analysis, we can see that the most common letter in the ciphertext is `w`, followed by `h`, `q` and `l`. Assuming that we don't have prior knowledge of the shift distance used in the Caesar cipher, we can start by assuming that one of these 4 letters corresponds to the letter `e` in the plaintext. We can then use this information to work out the shift distance. For example, if we assume that the letter `w` in the ciphertext corresponds to the letter `e` in the plaintext, we can work out that the shift distance is 18. This is because the letter `w` is 18 letters to the right of the letter `e` in the alphabet. We can then use this information to decrypt the ciphertext.
+## Further reading
 
-Let's write a function that will decipher a Caesar cipher for us:
-
-```js
-const caesarDecipher = (shift, text) => {
-  // Invert the original shift distance to get the plaintext
-  return caesarCipher(alphabet.length - shift, text)
-}
-```
-
-We can now use this function to try and decipher the ciphertext from the previous section by calculating the shift distance for each of the 4 most common letters in the ciphertext. If any of these shift distances produce readable text, we can assume that we have found the correct shift distance.
-
-```js
-// Utility function for finding shift distance for `e` from a given letter
-const findShiftDistance = letter => {
-  const index = alphabet.indexOf(letter)
-  return (index - alphabet.indexOf('e') + alphabet.length) % alphabet.length
-}
-// Find the shift distance for each of the 4 most common letters
-const shiftDistances = Object.keys(frequencyAnalysis(cipherText))
-  .sort(
-    (a, b) =>
-      frequencyAnalysis(cipherText)[b] - frequencyAnalysis(cipherText)[a]
-  )
-  .slice(0, 4)
-  .map(findShiftDistance)
-
-// Try each shift distance and print the result
-shiftDistances.forEach(shift => {
-  console.log('checking shift distance', shift)
-  console.log(caesarDecipher(shift, cipherText))
-})
-```
-
-This will print the following output:
-
-```
-checking shift distance 18
-espactxlcjestyrhspyjzfelvpldhzcotyjzfcslyodtdjzfctyepyetzyeznfeesppypxjhslepgpcespxplydhspypgpcjzfalccjstedactyrdectvpzcezfnsesppypxjdnfeetyrdhzcojzfxfdenfeesppypxjtyespdlxpxzgpxpyetetdpddpyetlwezleeltyestdtqjzfestyvzywjzqsteetyrdactyrtyrdectvtyrzcezfnstyresppypxjjzfhtwwyzemplmwplneflwwjeznfestx
-checking shift distance 3
-theprimarythingwhenyoutakeaswordinyourhandsisyourintentiontocuttheenemywhateverthemeanswheneveryouparryhitspringstrikeortouchtheenemyscuttingswordyoumustcuttheenemyinthesamemovementitisessentialtoattainthisifyouthinkonlyofhittingspringingstrikingortouchingtheenemyyouwillnotbeableactuallytocuthim
-checking shift distance 7
-pdalneiwnupdejcsdajukqpwgawosknzejukqndwjzoeoukqnejpajpekjpkyqppdaajaiusdwparanpdaiawjosdajaranukqlwnnudepolnejcopnegaknpkqydpdaajaiuoyqppejcosknzukqiqopyqppdaajaiuejpdaowiaikraiajpepeoaooajpewhpkwppwejpdeoebukqpdejgkjhukbdeppejcolnejcejcopnegejcknpkqydejcpdaajaiuukqsehhjkpxawxhawypqwhhupkyqpdei
-checking shift distance 12
-kyvgizdripkyzexnyvepflkrbvrjnfiuzepfliyreujzjpflizekvekzfekftlkkyvvevdpnyrkvmvikyvdvrejnyvevmvipflgriipyzkjgizexjkizbvfikfltykyvvevdpjtlkkzexjnfiupfldljktlkkyvvevdpzekyvjrdvdfmvdvekzkzjvjjvekzrckfrkkrzekyzjzwpflkyzebfecpfwyzkkzexjgizexzexjkizbzexfikfltyzexkyvvevdppflnzccefksvrscvrtklrccpkftlkyzd
-```
-
-We can see that when the shift distance of 3 is used, the plaintext is readable. This means that the shift distance is 3, result!
-
-## Removing the Human Element
-
-But surely we can do better than this? Currently we need to use some human intuition to detect the shift distance, by looking at the deciphered output. What if we could do this automatically?
-A simple approach that would cover many cases would be to use a word list, and check if the deciphered output contains any words from the word list. If it does, we can assume that we have found the correct shift distance. We can even try each of the shift distances that we calculated in the previous section, and see if any of them produce readable output, and then score the output based on how many readable words we find.
-I'll use ["Ogden's basic english word list"](http://ogden.basic-english.org/words.html) for this code. This is a list of 850 words that are commonly used in the English language. We can use this list to check if the deciphered output contains any words from the list.
-
-```js
-function crackCaesarCipher(cipherText) {
-  // Try each shift distance and print the result
-  let bestScore = 0
-  let bestShift = 0
-
-  for (let i = 1; i < alphabet.length; i++) {
-    const shift = i
-    const decipheredText = caesarDecipher(shift, cipherText)
-    const readableWords = words.filter(word => decipheredText.includes(word))
-    const score = readableWords.length / words.length
-    if (score > bestScore) {
-      bestScore = score
-      bestShift = shift
-    }
-  }
-
-  return bestShift
-}
-```
-
-This brute force approach will reliably find the correct shift distance for most cases, including cases where the plaintext [doesn't contain the letter `e`](<https://en.wikipedia.org/wiki/Gadsby_(novel)>). However, it is not perfect. For example, if the ciphertext contains a word that is not in the word list, it will not be detected. Using "1337speak" and replacing letters for numbers in your plaintext could defeat this decryption method. Additionally, intentionally leaving spelling mistakes in your plaintext could also defeat this method. It's also worth noting that this method is not very efficient, as it will try every possible shift distance, even if the ciphertext doesn't contain any words from the word list.
-
-What's next? I'd love to generalize this word list solution so that it can handle partial word matches and spelling mistakes. I'd also like to try and find a way to detect the shift distance without using a word list (possibly by going back to a frequency analysis of the plaintext) and expand it to cover other single substitution ciphers. If you have any ideas, please let me know!
+- [Wikipedia: Cipher](https://en.wikipedia.org/wiki/Cipher)
+- [Wikipedia: Substitution cipher](https://en.wikipedia.org/wiki/Substitution_cipher)
+- [Wikipedia: Caesar cipher](https://en.wikipedia.org/wiki/Caesar_cipher)
+- [Wikipedia: Frequency analysis](https://en.wikipedia.org/wiki/Frequency_analysis)
+- [Wikipedia: Cryptanalysis](https://en.wikipedia.org/wiki/Cryptanalysis)
+- [Wikipedia: Brute force attack](https://en.wikipedia.org/wiki/Brute-force_attack)
+- [Wikipedia: Dictionary attack](https://en.wikipedia.org/wiki/Dictionary_attack)
+- [In Code: A Mathematical Journey](https://books.google.co.uk/books/about/In_Code.html)
+- [The Code Book](https://simonsingh.net/books/the-code-book/)

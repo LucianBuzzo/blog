@@ -1,11 +1,11 @@
 ---
 title: Definitions for filtering properties in JSON schema
-date: "2019-03-02T19:30:32.250Z"
+date: '2019-03-02T19:30:32.250Z'
 ---
 
 Using `additionalProperties: false` to remove undefined fields from an object,
 is a feature that crops up regularly in JSON schema libraries, but tends to have
-some strange behaviours especially, once the `anyOf` keyword is used.
+some strange behaviors especially, once the `anyOf` keyword is used.
 This article aims to specify the expected functionality of this feature and what
 rules it should follow when filtering across different branches of an `anyOf`
 keyword.
@@ -28,8 +28,8 @@ Would normally fail validation against the following schema:
 
 ```yaml
 properties:
-    foo:
-        type: string
+  foo:
+    type: string
 required:
   - foo
 additionalProperties: false
@@ -43,8 +43,8 @@ internally the filter implementation would validate using the schema:
 
 ```yaml
 properties:
-    foo:
-        type: string
+  foo:
+    type: string
 required:
   - foo
 additionalProperties: true
@@ -59,6 +59,7 @@ foo: bar
 ```
 
 To make an analogy, filtering behaves like a cookie cutter:
+
 - There must be enough cookie dough to fill the cutter, otherwise, the dough is cannot be cut.
 - If there is excess dough then it is cut away by the cutter.
 
@@ -249,7 +250,7 @@ id: 45678
 slug: user-guest
 type: user
 data: {}
-roles: [ 'team' ]
+roles: ['team']
 ```
 
 And the following schema:

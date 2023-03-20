@@ -6,6 +6,7 @@ import get from 'lodash/get'
 import Bio from '../components/Bio'
 import Layout from '../components/Layout'
 import { rhythm, scale } from '../utils/typography'
+import Utterances from '../components/Utterances'
 
 class BlogPostTemplate extends React.Component {
   render() {
@@ -66,14 +67,8 @@ class BlogPostTemplate extends React.Component {
             }
           </li>
         </ul>
-        <script src="https://utteranc.es/client.js"
-          repo="LucianBuzzo/blog"
-          issue-term="title"
-          label="Comments"
-          theme="github-light"
-          crossOrigin="anonymous"
-          async>
-        </script>
+
+        <Utterances />
       </Layout>
     )
   }

@@ -1,6 +1,6 @@
 ---
 title: Exploring Cryptography - Frequency Analysis
-date: '2023-03-19T15:25:41.977Z'
+date: '2023-03-20T10:25:06.251Z'
 ---
 
 In this article we will be looking at a simple technique for breaking a simple substitution cipher. This technique is called frequency analysis, and is one of the simplest techniques for breaking a simple substitution cipher. It is also one of the most effective, and is often used as a first step in breaking a cipher.

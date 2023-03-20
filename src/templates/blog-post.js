@@ -66,6 +66,14 @@ class BlogPostTemplate extends React.Component {
             }
           </li>
         </ul>
+        <script src="https://utteranc.es/client.js"
+          repo="LucianBuzzo/blog"
+          issue-term="title"
+          label="Comments"
+          theme="github-light"
+          crossOrigin="anonymous"
+          async>
+        </script>
       </Layout>
     )
   }

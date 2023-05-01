@@ -2,6 +2,13 @@ code {
   font-size: 0.75em !important;
 }
 
+code[class*='language-'],
+pre[class*='language-'] {
+  color: #657b83;
+  font-family: 'Cascadia Code', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono',
+    monospace;
+}
+
 @keyframes wiggle {
   0%,
   100% {

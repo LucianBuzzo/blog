@@ -98,5 +98,18 @@ module.exports = {
         pathToConfigModule: 'src/utils/typography',
       },
     },
+    {
+      resolve: `gatsby-omni-font-loader`,
+      options: {
+        enableListener: true,
+        preconnect: [`https://fonts.cdnfonts.com`],
+        web: [
+          {
+            name: `Cascadia Code`,
+            file: `https://fonts.cdnfonts.com/css/cascadia-code`,
+          },
+        ],
+      },
+    },
   ],
 }

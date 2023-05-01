@@ -3,7 +3,7 @@ title: Exploring Cryptography - Frequency Analysis pt.3
 date: '2023-04-02T10:06:03.598Z'
 ---
 
-In [part 2](https://lucianbuzzo.com/exploring-cryptography-frequency-analysis-pt2/) I showed how you could crack a Caesar Cipher using frequency analysis alone. In this post I'm going to look at applying a similar technique to crack simple substitution ciphers, where the cipher alphabet is not known ahead of time. 
+In [part 2](https://lucianbuzzo.com/exploring-cryptography-frequency-analysis-pt2/) I showed how you could crack a Caesar Cipher using frequency analysis alone. In this post I'm going to look at applying a similar technique to crack simple substitution ciphers, where the cipher alphabet is not known ahead of time.
 
 A simple substitution cipher can be easily created using a pen and paper. First you write out each letter of the alphabet on a single line, then you shuffle the alphabet into a random order, and write the shuffled alphabet on the line below.
 
@@ -14,7 +14,7 @@ xahbjkystvqucmefzolwnpigrd
 
 To encipher some text, you take the first character of the text, and find the corresponding character on the top line, and then write the character from the bottom line in the same position. You then repeat this process for the second character of the text, and so on. Using the example above, the text `hello` would be enciphered as `sjuue`. To decipher text, you perform the same process in reverse, starting by finding the character in the bottom line, and then writing the corresponding character from the top line in the same position. Note that you can use non alphabetical characters in the cipher text, as long as each character in the plain text alphabet corresponds to a single symbol, you can use anything you want - including emojis!
 
-Simple substitution ciphers are a lot more secure than the Caesar Cipher, but they are still relatively easy to crack using frequency analysis. Whilst they are not very useful for serious cryptography, I think they are a good on-ramp to a lot of the core ideas in cryptography and cryptanalysis, specifically how underlying patterns in the encoding structure can be exploited to "break" the cipher. 
+Simple substitution ciphers are a lot more secure than the Caesar Cipher, but they are still relatively easy to crack using frequency analysis. Whilst they are not very useful for serious cryptography, I think they are a good on-ramp to a lot of the core ideas in cryptography and cryptanalysis, specifically how underlying patterns in the encoding structure can be exploited to "break" the cipher.
 
 ## The Cipher
 
@@ -36,7 +36,7 @@ We can [write a simple test](https://jestjs.io/) to check that the cipher works 
 ```ts
 describe('Simple Substitution Cipher', () => {
   it('should encode a string', () => {
-    // Classis Caesar Cipher (3)
+    // Classic Caesar Cipher (3)
     const key = 'defghijklmnopqrstuvwxyzabc'
     expect(encipher('hello', key)).toBe('khoor')
   })
@@ -174,6 +174,7 @@ const STANDARD_FREQUENCIES = {
 ```
 
 Then I'm going to create a `crack` function that will take a ciphertext and attempt to decode it using the following steps:
+
 1. Create a frequency map of the ciphertext
 2. For each character in the frequency map, find the character in the standard frequency map that has the closest frequency
 3. Create a cipher alphabet using the closest characters
@@ -194,22 +195,22 @@ export const crack = (input: string) => {
   // Iterate through the STANDARD_FREQUENCIES and find the best match in the cipherFrequency
   while (Object.values(cipherMap).includes(null)) {
     for (let char in STANDARD_FREQUENCIES) {
-      let bestMatch = null;
-      let bestScore = Infinity;
+      let bestMatch = null
+      let bestScore = Infinity
 
       for (let cipherChar in cipherFrequency) {
         const score = Math.abs(
           (STANDARD_FREQUENCIES as any)[char] - cipherFrequency[cipherChar]
-        );
+        )
 
         if (score < bestScore && cipherMap[cipherChar] === null) {
-          bestScore = score;
-          bestMatch = cipherChar;
+          bestScore = score
+          bestMatch = cipherChar
         }
       }
 
       if (bestMatch) {
-        (cipherMap as any)[bestMatch] = char;
+        ;(cipherMap as any)[bestMatch] = char
       }
     }
   }
@@ -218,11 +219,7 @@ export const crack = (input: string) => {
   const cipherAlphabet = Object.values(cipherMap).join('')
 
   // Decipher the cipher text
-  return processText(
-    cipherText,
-    ALPHABET,
-    cipherAlphabet,
-  )
+  return processText(cipherText, ALPHABET, cipherAlphabet)
 }
 ```
 
@@ -231,7 +228,7 @@ I need to find a better approach, one that can better exploit the patterns in th
 
 ## Quadgrams
 
-The approach I'm going to try will use quadgrams. A quadgram (also known as a 4-gram) is a continuous sequence of four characters from a given text. In the context of cracking codes, they can be useful for finding patterns in text and measuring how accurate a deciphering attempt is  By comparing the frequency distribution of quadgrams in the decrypted text to a known distribution of quadgrams in the target language (e.g., English), you can estimate how likely it is that the decrypted text is meaningful and correctly decrypted.
+The approach I'm going to try will use quadgrams. A quadgram (also known as a 4-gram) is a continuous sequence of four characters from a given text. In the context of cracking codes, they can be useful for finding patterns in text and measuring how accurate a deciphering attempt is By comparing the frequency distribution of quadgrams in the decrypted text to a known distribution of quadgrams in the target language (e.g., English), you can estimate how likely it is that the decrypted text is meaningful and correctly decrypted.
 
 For example, in the text "hello world", the quadgrams are:
 
@@ -250,91 +247,93 @@ Essentially we're going to use the same approach as before, but instead of compa
 I'm going to be using the quadgrams from the practical cryptography website, which you can find [here](http://practicalcryptography.com/cryptanalysis/text-characterisation/quadgrams/). I've downloaded the file and put it in the `src` directory. I'm going to use the `fs` module to read the file and create a map of quadgrams and their frequencies:
 
 ```ts
-import { readFileSync } from "fs";
+import { readFileSync } from 'fs'
 
 const loadQuadgramData = (filename: string) => {
-  const fileContent = readFileSync(filename, "utf-8");
-  const lines = fileContent.split("\n");
-  const quadgramMap: Record<string, number> = {};
+  const fileContent = readFileSync(filename, 'utf-8')
+  const lines = fileContent.split('\n')
+  const quadgramMap: Record<string, number> = {}
 
   for (const line of lines) {
-    const [quadgram, frequency] = line.split(" ");
-    quadgramMap[quadgram.toLowerCase()] = parseInt(frequency, 10);
+    const [quadgram, frequency] = line.split(' ')
+    quadgramMap[quadgram.toLowerCase()] = parseInt(frequency, 10)
   }
 
-  return quadgramMap;
-};
+  return quadgramMap
+}
 
-const QUADGRAMS_FILE = "./english_quadgrams.txt";
-const QUADGRAMS = loadQuadgramData(QUADGRAMS_FILE);
+const QUADGRAMS_FILE = './english_quadgrams.txt'
+const QUADGRAMS = loadQuadgramData(QUADGRAMS_FILE)
 ```
 
 I'm then going to repeatedly different combinations of the cipher alphabet, scoring them based on the quadgram frequencies, if the score is higher than the previous best score, I'll keep the new score and cipher alphabet. This approach is sometimes called a "hill-climbing" algorithm, because it's like climbing a hill, and you're always trying to find the highest point. You retain results that move you "up the hill", but discard results that move you "down the hill". This is a very simple approach, but it works surprisingly well in practice, despite having some drawbacks like getting stuck in a local maximum.
 
 ```ts
 const quadgramScore = (text: string) => {
-  let score = 0;
-  const cleanedText = text.replace(/[^a-z]/g, "").toLowerCase();
+  let score = 0
+  const cleanedText = text.replace(/[^a-z]/g, '').toLowerCase()
 
   for (let i = 0; i < cleanedText.length - 3; i++) {
-    const quadgram = cleanedText.slice(i, i + 4);
-    const quadgramFrequency = QUADGRAMS[quadgram] || 0;
-    score += Math.log(quadgramFrequency + 1);
+    const quadgram = cleanedText.slice(i, i + 4)
+    const quadgramFrequency = QUADGRAMS[quadgram] || 0
+    score += Math.log(quadgramFrequency + 1)
   }
 
-  return score;
-};
+  return score
+}
 
 export const crack = (cipherText: string) => {
   // Remove non-alphabetic characters and convert to lowercase
-  const cleanedCipherText = cipherText.toLowerCase().replace(/[^a-z]/g, "");
+  const cleanedCipherText = cipherText.toLowerCase().replace(/[^a-z]/g, '')
 
   // Function to swap two characters in a string at positions i and j
   const swapPositions = (str: string, i: number, j: number) => {
-    const chars = str.split("");
-    [chars[i], chars[j]] = [chars[j], chars[i]];
-    return chars.join("");
-  };
+    const chars = str.split('')
+    ;[chars[i], chars[j]] = [chars[j], chars[i]]
+    return chars.join('')
+  }
 
   // Function to get a random integer between min and max (inclusive)
   const getRandomInt = (min: number, max: number) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
+    return Math.floor(Math.random() * (max - min + 1)) + min
+  }
 
   // Set the maximum number of iterations for the hill-climbing algorithm
-  const MAX_ITERATIONS = 10000;
+  const MAX_ITERATIONS = 10000
 
   // Generate a random initial alphabet as the starting point
-  let bestAlphabet = ALPHABET.split("").sort(() => Math.random() - 0.5).join("");
+  let bestAlphabet = ALPHABET.split('')
+    .sort(() => Math.random() - 0.5)
+    .join('')
 
   // Decrypt the text using the initial alphabet and calculate its quadgram score
-  let bestText = processText(cleanedCipherText, ALPHABET, bestAlphabet);
-  let bestScore = quadgramScore(bestText);
+  let bestText = processText(cleanedCipherText, ALPHABET, bestAlphabet)
+  let bestScore = quadgramScore(bestText)
 
   // Iterate through the hill-climbing algorithm
   for (let iteration = 0; iteration < MAX_ITERATIONS; iteration++) {
     // Get two random positions in the alphabet
-    const i = getRandomInt(0, 25);
-    const j = getRandomInt(0, 25);
+    const i = getRandomInt(0, 25)
+    const j = getRandomInt(0, 25)
 
     // Swap characters at the random positions in the current best alphabet
-    const newAlphabet = swapPositions(bestAlphabet, i, j);
+    const newAlphabet = swapPositions(bestAlphabet, i, j)
 
     // Decrypt the text using the new alphabet and calculate its quadgram score
-    const newText = processText(cleanedCipherText, ALPHABET, newAlphabet);
-    const newScore = quadgramScore(newText);
+    const newText = processText(cleanedCipherText, ALPHABET, newAlphabet)
+    const newScore = quadgramScore(newText)
 
     // If the new quadgram score is better, update the best alphabet, text, and score
     if (newScore > bestScore) {
-      bestAlphabet = newAlphabet;
-      bestText = newText;
-      bestScore = newScore;
+      bestAlphabet = newAlphabet
+      bestText = newText
+      bestScore = newScore
     }
   }
 
   // Decipher the original cipher text using the best alphabet found
   return processText(cipherText, ALPHABET, bestAlphabet)
-};
+}
 ```
 
 This performs remarkably well! When you use quadgrams in frequency analysis, you're taking into account not only the frequency of individual letters but also the likelihood of specific letter combinations appearing together. This allows you to better exploit the patterns found in the English language and provides a more accurate representation of the language's structure.
@@ -343,8 +342,9 @@ It's also worth noting that this algorithm is not the fastest, taking about 30 s
 
 Whilst you can use different n-grams, quadgrams are favored because they strike a balance between computational efficiency and accuracy. When you go from a quadgram to a 5-gram the number of possible combinations increases exponentially. For example, with a 26-character alphabet, there are 26^4 = 456,976 quadgrams, but there are 26^5 = 11,881,376 5-grams. Additionally, the frequency of 5-grams is much lower than that of quadgrams, so the scoring function will be less accurate.
 
-If this article was interesting to you, I highly recommend that you play around with these ideas yourself: 
-- try creating your own cipher functions 
+If this article was interesting to you, I highly recommend that you play around with these ideas yourself:
+
+- try creating your own cipher functions
 - extend the code here to work with non alphabetic characters
 - try using different n-grams to score the decrypted text
 - try using a different algorithm to find the best cipher alphabet

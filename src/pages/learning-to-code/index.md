@@ -1,5 +1,5 @@
 ---
-title: 'How to Get into Software Development: A Practical Guide'
+title: 'How to Start Coding: A Practical Guide'
 date: '2023-05-01T09:21:56.401Z'
 ---
 

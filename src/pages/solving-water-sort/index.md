@@ -200,11 +200,3 @@ I can now follow these instructions step-by-step to solve the water-sort problem
 What's next? Although the logic is sound, setting up the game state and then following the solution is really awkward and error-prone. I'd really like to be able to streamline this process by adding a UI for the solver, but thats a problem for another post!
 
 [1]: https://html5.gamedistribution.com/rvvASMiM/d77896c3e7e443b7b48ead37718d7b01/index.html?gd_sdk_referrer_url=https%3A%2F%2Fwww.crazygames.com%2Fgame%2Fwater-sort-puzzle&gd_zone_config=eyJwYXJlbnRVUkwiOiJodHRwczovL3d3dy5jcmF6eWdhbWVzLmNvbS9nYW1lL3dhdGVyLXNvcnQtcHV6emxlIiwicGFyZW50RG9tYWluIjoiY3JhenlnYW1lcy5jb20iLCJ0b3BEb21haW4iOiJjcmF6eWdhbWVzLmNvbSIsImhhc0ltcHJlc3Npb24iOmZhbHNlLCJsb2FkZXJFbmFibGVkIjp0cnVlLCJob3N0IjoiaHRtbDUuZ2FtZWRpc3RyaWJ1dGlvbi5jb20iLCJ2ZXJzaW9uIjoiMS41LjE2In0%253D
-
-```
-
-```
-
-```
-
-```

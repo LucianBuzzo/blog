@@ -227,7 +227,7 @@ The corresponding css is as follows:
 
 The final effect is very pleasing to look at!
 
-<video controls="controls" name="Gemini Spin">
+<video controls="controls" width="587px" name="Gemini Spin">
   <source src="gemini-spin.mov">
 </video>
 

@@ -6,7 +6,7 @@ date: '2025-05-22T10:06:03.598Z'
 In cryptography, a one-time pad (OTP) is a type of encryption that uses a random key that is as long as the message to be encrypted. The key is used only once and then discarded. Each character of the message is encrypted using the corresponding character in the key, using [modular addition](https://en.wikipedia.org/wiki/Modular_arithmetic).
 The key used would be shared between the sender and receiver ahead of time and a system would be put in place to make sure the send and receiver use the same key for encryption and decryption, e.g. use a new key for each message.
 
-What doe this look like in practice? Let's say for example that Alice wants to send a message to Bob. 
+What does this look like in practice? Let's say for example that Alice wants to send a message to Bob. 
 They each have a copy of the same one time pad, which is a pad of sheets of paper, each with a random sequence of numbers on it.
 Each sheet of the pad acts as the encryption key and is unique and is used only once - hence the name "one time pad".
 
